@@ -10,6 +10,7 @@ Voraussetzungen:
 - git
 - ufw
 - rsync
+- Zugang per ssh
 
 Optional:
 - ein Webserver (hier caddy)
