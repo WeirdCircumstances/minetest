@@ -143,7 +143,7 @@ Als nächstes muss eine leere Log-Datei angelegt werden, in die zukünftig alle 
 touch ~/log/30000.log
 ```
 
-Die Server sollen automatisch starten, Backups erzeugen und Abends wieder herunter fahren. Dazu werden bei Skripte erzeugt, die das in Zukunft für uns erledigen.
+Die Server sollen automatisch starten, Backups erzeugen und Abends wieder herunter fahren. Dazu werden zwei Skripte erzeugt, die das in Zukunft für uns erledigen.
 
 Das erste Skript erhält den Namen cron-start.sh und bekommt folgenden Inhalt:
 
@@ -190,7 +190,7 @@ mkdir -r ~/minetest/worlds/30000
 
 Der Prozess wiederholt sich für alle weiteren Welten.
 
-Die Konfiguration einer jeden Welt wird in dem Ornder mit dem Namen der Welt unter ~/minetest/ abgelegt. In Fall der Welt 30000 also im Ornder ~/minetest/30000.
+Die Konfiguration einer jeden Welt wird in dem Ornder mit dem Namen der Welt unter ~/minetest/ abgelegt. In Fall der Welt 30000 also im Ornder ~/minetest/worlds/30000.
 Die Konfiguration ist zentraler Bestandteil einer jeden Minetest-Welt. In ihr werden Mods und Rechte verwaltet.
 
 Eine vollständige Konfiguration mit dem Namen minetest.conf sieht so aus:
@@ -299,7 +299,7 @@ Die Minetest-Welt kann nun mit einem der verfügbaren Minetest-Clients besucht w
 ifconfig
 ```
 
-Die Adresse steht zu beginnt des Asudrucks hinter der Bezeichnung inet.
+Die Adresse steht zu beginnt des Ausdrucks hinter der Bezeichnung inet.
 Der Port entspricht dem aus der Konfiguration, hier also 30000.
 Es kann ein Beutzername frei gewählt werden. Das Passwort ist zunächst das aus der Konfiguration ( hier default_password = DasStandardpasswort), kann und sollte aber später über den Einstellungsdialog aus Minetest heraus geändert werden.
 
@@ -319,7 +319,7 @@ apt update && apt full-upgrade && apt autoremove && apt autoclean
 
 zu installieren.
 
-Optional und richtig spannend wird es, wenn der Welt Mods (kurz für Modifikationen oder Erweiterungen) hinzugefügt werden. Hier ein Asuzug der Datei world.mt
+Optional und richtig spannend wird es, wenn der Welt Mods (kurz für Modifikationen oder Erweiterungen) hinzugefügt werden. Hier ein Auszug der Datei world.mt
 
 ```
 creative_mode = false
@@ -451,7 +451,49 @@ load_mod_castle_weapons = false
 load_mod_elevator = 1
 ```
 
-Mods können mit true oder 1 aktiviert werden und 0 oder false deaktiviert werden. Mods können leider nicht direkt über den Server installiert werden. Dazu empfielt sich, die Mods mit dem Minetest-Client Programm herunterzuladen und dann auf den Server zu übertragen. Das Programm rsync empfielt sich dafür besonders.
+Mods können mit true oder 1 aktiviert werden und 0 oder false deaktiviert werden. Mods können leider nicht direkt über den Server installiert werden. Dazu empfielt sich, die Mods mit dem Minetest-Client Programm herunterzuladen und dann auf den Server zu übertragen. Das Programm rsync empfielt sich dafür besonders. Nicht jede Kombination aus Mods funktioniert. Manchmal sind auch noch weitere Mods, genannt Abhängigkeiten notwendig, damit die Mods auch funktionieren. Eine genaue Analyse der Logdatei ist dazu notwendig. Manchmal zeigen sich Probleme auch erst im laufenden Betrieb.
+
+Der Server sollte nun mit einer Firewall abgesichert werden.
+Ganz wichtig, und ich schreibe das hier, weil das schon mehrfach vorgekommen ist, muss ssh zu dem Zeitpunkt bereits endgültig eingerichtet sein.
+Der Dienst ssh ist am sichersten, wenn der Zugang per Passwort verboten ist und nur per Schlüssel möglich ist. Zur Einrichtung eignet sich die offizielle Anleitung sehr gut: https://www.ssh.com/ssh/key/
+
+der Firwall ufw können nun verscheidene Dienste hinzugefügt werden.
+
+Mit dem Aufruf
+
+```
+ufw allow ssh
+```
+
+wird der Zugang per ssh erlaubt werden. Das ist essentiell, da man sich sonst aus dem Server ausperrt und schlimmstenfalls alle Arbeit verloren geht.
+
+Danach müssen noch weitere Dienste hinzugefügt werden
+
+```
+ufw allow 80
+ufw allow 443
+ufw allow 30000:30010
+```
+
+Die Argumente hinter allow stehen jeweils für einen Port (80 für http, 443 für https) oder für eine Reihe von Ports 30000:30010 also für alle Ports von 30000 bis 30010.
+
+Die Firewall kann anschließend mit 
+
+```
+ufw enable
+```
+
+aktiviert werden. Danach sollte noch kurz überprüft werden, ob alle Dienste wie erwarte konfigurtiert wurden mit
+
+```
+ufw list
+```
+
+bzw indem die Dienste von aussen benutzt werden. Das heißt, funktioniert eine Websiete noch (sofern vorhanden) und ist Minetest noch erreichbar. Sollten hierbei Probleme auftreten, sollte die Konfiguration nocheinmal überprüft werden, bevor der Zugang per ssh beendet wird.
+
+Hat alles bis hier hin geklappt, ist Minetest erfolgreich eingerichtet. 
+
+Herzlichen Glückwunsch!
 
 # Optionale Funktionen
 
