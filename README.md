@@ -457,7 +457,7 @@ Der Server sollte nun mit einer Firewall abgesichert werden.
 Ganz wichtig, und ich schreibe das hier, weil das schon mehrfach vorgekommen ist, muss ssh zu dem Zeitpunkt bereits endgültig eingerichtet sein.
 Der Dienst ssh ist am sichersten, wenn der Zugang per Passwort verboten ist und nur per Schlüssel möglich ist. Zur Einrichtung eignet sich die offizielle Anleitung sehr gut: https://www.ssh.com/ssh/key/
 
-der Firwall ufw können nun verscheidene Dienste hinzugefügt werden.
+Der Firwall ufw müssen verschiedene Dienste hinzugefügt werden, bevor sie aktiviert werden darf.
 
 Mit dem Aufruf
 
