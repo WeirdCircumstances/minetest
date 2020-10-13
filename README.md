@@ -182,7 +182,7 @@ Alle in dem Ordner services vorhandenen Dateien müssen nun als ausführbar mark
 chmod +x 30000.sh cron-start.sh cron-stop.sh
 ```
 
-Nun müssen noch die Ornder erstellt werden, in denen die Welten und die Konfiguration liegen sollen:
+Nun müssen noch die Ordner erstellt werden, in denen die Welten und die Konfiguration liegen sollen:
 
 ```
 mkdir -r ~/minetest/worlds/30000
@@ -190,7 +190,7 @@ mkdir -r ~/minetest/worlds/30000
 
 Der Prozess wiederholt sich für alle weiteren Welten.
 
-Die Konfiguration einer jeden Welt wird in dem Ornder mit dem Namen der Welt unter ~/minetest/ abgelegt. In Fall der Welt 30000 also im Ornder ~/minetest/worlds/30000.
+Die Konfiguration einer jeden Welt wird in dem Ordner mit dem Namen der Welt unter ~/minetest/ abgelegt. In Fall der Welt 30000 also im Ordner ~/minetest/worlds/30000.
 Die Konfiguration ist zentraler Bestandteil einer jeden Minetest-Welt. In ihr werden Mods und Rechte verwaltet.
 
 Eine vollständige Konfiguration mit dem Namen minetest.conf sieht so aus:
