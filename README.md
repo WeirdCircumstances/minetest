@@ -319,7 +319,8 @@ apt update && apt full-upgrade && apt autoremove && apt autoclean
 
 zu installieren.
 
-Optional und richtig spannend wird es, wenn der Welt Mods (kurz für Modifikationen oder Erweiterungen) hinzugefügt werden. Hier ein Auszug der Datei world.mt
+Optional und richtig spannend wird es, wenn der Welt Mods (kurz für Modifikationen oder Erweiterungen) hinzugefügt werden. 
+Hier ein Auszug der Datei world.mt
 
 ```
 creative_mode = false
@@ -455,7 +456,8 @@ Mods können mit true oder 1 aktiviert werden und 0 oder false deaktiviert werde
 
 Der Server sollte nun mit einer Firewall abgesichert werden.
 Ganz wichtig, und ich schreibe das hier, weil das schon mehrfach vorgekommen ist, muss ssh zu dem Zeitpunkt bereits endgültig eingerichtet sein.
-Der Dienst ssh ist am sichersten, wenn der Zugang per Passwort verboten ist und nur per Schlüssel möglich ist. Zur Einrichtung eignet sich die offizielle Anleitung sehr gut: https://www.ssh.com/ssh/key/
+Der Dienst ssh ist am sichersten, wenn der Zugang per Passwort verboten ist und nur per Schlüssel möglich ist. 
+Zur Einrichtung eignet sich die offizielle Anleitung sehr gut: https://www.ssh.com/ssh/key/
 
 Der Firwall ufw müssen verschiedene Dienste hinzugefügt werden, bevor sie aktiviert werden darf.
 
@@ -503,7 +505,7 @@ Hier wurde der super schlanke und trotzdem mächtige Webserver caddy benutzt. Er
 
 Zur Installation von Caddy empfielt es sich der sehr guten offiziellen Anleitung zu folgen: https://caddyserver.com/docs/install
 
-Eine Webseite ist mit diesen Befehlen im Caddyfile (unter /var/www/site) bereits eingerichtet und voll funktionsfähig:
+Der Webserver caddy ist mit diesen Befehlen im Caddyfile (unter /var/www/site) bereits eingerichtet und voll funktionsfähig:
 
 ```
 NameDerWebseite.de www.NameDerWebseite.de {
@@ -516,7 +518,11 @@ NameDerWebseite.de www.NameDerWebseite.de {
 }
 
 ```
-Eine Webseite benötigt jetzt nur noch zwei weitere Dateien. Einmal die index.html 
+
+Damit ein Name angezeigt werden kann, muss vorher eine Domain gekauft werden und entsprechend eingerichtet sein, damit die Namensauflösung für die aktuelle IP-Adresse funktioniert. Die Einrichtung einer Domain hängt stark von Anbieter ab, der dann ensprechende Informationen zur Einrichtung bereithält.
+
+Der Webserver benötigt nun nur noch die Dateien, die die Webseite bilden. Dafür sind nur noch zwei weitere Dateien nötig. 
+Einmal die index.html 
 
 ```
 {{$pathParts := splitList "/" .OriginalReq.URL.Path}}
@@ -559,7 +565,8 @@ Eine Webseite benötigt jetzt nur noch zwei weitere Dateien. Einmal die index.ht
 </html>
 ```
 
-Und einmal die index.md, die mit einem beliebigen Text gefüllt werden kann, der mit Markdown-Syntax interpretiert wird. Als Einführung zu Markdown und der Syntax ist https://www.markdowntutorial.com/ eine gute Quelle.
+Und einmal die index.md, die mit einem beliebigen Text gefüllt werden kann, der mit Markdown-Syntax interpretiert wird. 
+Als Einführung zu Markdown und der Syntax ist https://www.markdowntutorial.com/ eine gute Quelle.
 
 Wenn der Server noch Hintergrundinformationen über ein Dashboard dargestellen soll, dann eigent sich Grafana mit dem Telegraf. Die Einrichtung geht aber über die Möglichkeiten dieses Dokuments hinaus.
 
