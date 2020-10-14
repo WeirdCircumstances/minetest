@@ -116,7 +116,7 @@ kann schnell in das passende Home-Verzeichnis gewechselt werden (Kontrolle mit p
 Hier werden zunächst mehrere Verzeichnisse angelegt:
 
 ```
-mkdir minetest services logs
+mkdir minetest services log
 ```
 
 Das minetest Verzeichnis wird alle Welten und die passenden Konfigurationen zum Minetest-Server enthalten. Services enthält alle Tools, mit denen der Server automatisiert neu gestartet werden kann, Backups erstellt werden und das Log gefüllt. Das Verzeichnis log schließlich enthält alle Logs der jeweiligen Server.
@@ -163,8 +163,8 @@ Das zweite Skript erhält den Namen cron-stop.sh und bekommt folgenden Inhalt:
 systemctl stop 30000
 systemctl stop 30001
 
-rsync -av /home/minetest/minetest/30000 /var/www/site/backups/
-rsync -av /home/minetest/minetest/30001 /var/www/site/backups/
+rsync -av /home/minetest/minetest/worlds/30000 /var/www/site/backups/
+rsync -av /home/minetest/minetest/worlds/30001 /var/www/site/backups/
 
 zip -r /var/www/site/backups/minetest-Port30000-$(date +%d.%m.%Y-%H:%M:%S).zip /var/www/site/backups/30000
 zip -r /var/www/site/backups/modtest-Port30001-$(date +%d.%m.%Y-%H:%M:%S).zip /var/www/site/backups/30001
@@ -175,6 +175,9 @@ rm -r /var/www/site/backups/30001
 
 Das Skript stoppt beide Server, kopiert den Inhalt an einen anderen Ort (hier expemlarisch an einen Webserver mit den Namen site). Danach wird eine Zip-Datei aus jedem Backup mit dem aktuellen Datum und der Uhrzeit erstellt. Die Backups werden nachher über den Webserver verfügbar sein.
 Die nicht komprimierten Backups werden anschließend wieder gelöscht.
+
+Später müssen die Ornder für die Backups mit dem Benutzerrechten root oder www-data angelegt werden.
+Sollen die Backups woanders verfügbar gemacht werden, dann sind die Skripte entsprechend anzupassen.
 
 Alle in dem Ordner services vorhandenen Dateien müssen nun als ausführbar markiert werden:
 
@@ -293,6 +296,23 @@ sudo systemctl start 30000.service
 sudo systemctl stop 30000.service
 ```
 
+Der Erfolg sollte mit dem Aufrufen 
+
+```
+sudo systemctl status 30000.service
+sudo journalctl -x
+```
+
+überprüft werden. Eventuelle Startprobleme werden hier sichtbar.
+
+Der cron-Job für den automatischen Stopp legt Backupdateien unter /var/www/site/backups an. Am Anfang sind diese Ornder nicht vorhanden. Sie können mit dem Aufruf
+
+```
+sudo mkdir -r /var/www/site/backups
+```
+
+erstellt werden.
+
 Die Minetest-Welt kann nun mit einem der verfügbaren Minetest-Clients besucht werden. Dazu wird die IP-Adresse oder besser ein Name des Servers benötigt. Die IP-Adresse erfährt man mit dem Befehl 
 
 ```
@@ -314,7 +334,7 @@ Auftretene Probleme sind damit frühzeitig sichtbar, auch ohne dass es in den me
 Es empfiehlt sich von Zeit zu Zeit den Server per ssh zu besuchen und die Logdateien zu überprüfen und Systemaupdates mit der Befehlskette
 
 ```
-apt update && apt full-upgrade && apt autoremove && apt autoclean
+sudo apt update && sudo apt full-upgrade && sudo apt autoremove && sudo apt autoclean
 ```
 
 zu installieren.
@@ -455,7 +475,7 @@ load_mod_elevator = 1
 Mods können mit true oder 1 aktiviert werden und 0 oder false deaktiviert werden. Mods können leider nicht direkt über den Server installiert werden. Dazu empfielt sich, die Mods mit dem Minetest-Client Programm herunterzuladen und dann auf den Server zu übertragen. Das Programm rsync empfielt sich dafür besonders. Nicht jede Kombination aus Mods funktioniert. Manchmal sind auch noch weitere Mods, genannt Abhängigkeiten notwendig, damit die Mods auch funktionieren. Eine genaue Analyse der Logdatei ist dazu notwendig. Manchmal zeigen sich Probleme auch erst im laufenden Betrieb.
 
 Der Server sollte nun mit einer Firewall abgesichert werden.
-Ganz wichtig, und ich schreibe das hier, weil das schon mehrfach vorgekommen ist, muss ssh zu dem Zeitpunkt bereits endgültig eingerichtet sein.
+Es ist sehr wichtig, dass ssh mit in der Liste der erlaubten Dienste enthalten ist und auch der, eventuell verschobene Port, weiterhin erreichbar bleibt.
 Der Dienst ssh ist am sichersten, wenn der Zugang per Passwort verboten ist und nur per Schlüssel möglich ist. 
 Zur Einrichtung eignet sich die offizielle Anleitung sehr gut: https://www.ssh.com/ssh/key/
 
@@ -467,7 +487,7 @@ Mit dem Aufruf
 ufw allow ssh
 ```
 
-wird der Zugang per ssh erlaubt werden. Das ist essentiell, da man sich sonst aus dem Server ausperrt und schlimmstenfalls alle Arbeit verloren geht.
+wird der Zugang per ssh erlaubt. Das ist essentiell, da man sich sonst aus dem Server ausperrt.
 
 Danach müssen noch weitere Dienste hinzugefügt werden
 
@@ -485,17 +505,21 @@ Die Firewall kann anschließend mit
 ufw enable
 ```
 
-aktiviert werden. Danach sollte noch kurz überprüft werden, ob alle Dienste wie erwarte konfigurtiert wurden mit
+aktiviert werden. Danach sollte noch kurz überprüft werden, ob alle Dienste wie erwartet konfigurtiert wurden mit
 
 ```
 ufw list
 ```
 
-bzw indem die Dienste von aussen benutzt werden. Das heißt, funktioniert eine Websiete noch (sofern vorhanden) und ist Minetest noch erreichbar. Sollten hierbei Probleme auftreten, sollte die Konfiguration nocheinmal überprüft werden, bevor der Zugang per ssh beendet wird.
+bzw indem die Dienste von aussen benutzt werden. Das heißt, funktioniert eine Websiete noch (sofern vorhanden) und ist Minetest noch erreichbar. 
+Jetzt sollte auch in einem zweiten Terminalfenster testweise eine wweitere ssh-Verbindung hergestellt werden.
+Sollten hierbei Probleme auftreten, sollte die Konfiguration nocheinmal überprüft werden, bevor der Zugang per ssh beendet wird.
 
 Hat alles bis hier hin geklappt, ist Minetest erfolgreich eingerichtet. 
 
 Herzlichen Glückwunsch!
+
+Die cron-Jobs wurden noch nicht gestestet, deshalb ist es gut, die Logs in den nächsten Tagen im Auge zu behalten um sicher zu gehen, dass alles korrekt funktioniert.
 
 # Optionale Funktionen
 
