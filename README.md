@@ -472,7 +472,15 @@ load_mod_castle_weapons = false
 load_mod_elevator = 1
 ```
 
-Mods können mit true oder 1 aktiviert werden und 0 oder false deaktiviert werden. Mods können leider nicht direkt über den Server installiert werden. Dazu empfielt sich, die Mods mit dem Minetest-Client Programm herunterzuladen und dann auf den Server zu übertragen. Das Programm rsync empfielt sich dafür besonders. Nicht jede Kombination aus Mods funktioniert. Manchmal sind auch noch weitere Mods, genannt Abhängigkeiten notwendig, damit die Mods auch funktionieren. Eine genaue Analyse der Logdatei ist dazu notwendig. Manchmal zeigen sich Probleme auch erst im laufenden Betrieb.
+Mods können mit true oder 1 aktiviert werden und 0 oder false deaktiviert werden. Mods können leider nicht direkt über den Server installiert werden. Dazu empfielt sich, die Mods mit dem Minetest-Client Programm herunterzuladen und dann auf den Server zu übertragen. Das Programm rsync empfielt sich dafür besonders. 
+
+Mit diesem BEfehl können alle Mods auf den Server übetragen werden:
+
+```
+rsync -avh ~/Library/Application\ Support/minetest/mods/ kulti:/home/minetest/.minetest/mods/
+```
+
+Nicht jede Kombination aus Mods funktioniert. Manchmal sind auch noch weitere Mods, genannt Abhängigkeiten notwendig, damit die Mods auch funktionieren. Eine genaue Analyse der Logdatei ist dazu notwendig. Manchmal zeigen sich Probleme auch erst im laufenden Betrieb.
 
 Der Server sollte nun mit einer Firewall abgesichert werden.
 Es ist sehr wichtig, dass ssh mit in der Liste der erlaubten Dienste enthalten ist und auch der, eventuell verschobene Port, weiterhin erreichbar bleibt.
